@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import moment from "moment";
+import axios from "axios";
 import {
   BrowserRouter as Router,
   Switch, 
@@ -7,16 +8,37 @@ import {
 } from "react-router-dom";
 
 
-import PortfolioContainer from './portfolio/portfolio-container';
 import NavigationComponent from './navigation/navigation-container';
 import Home from "./pages/home";
 import About from "./pages/about";
 import Contact from "./pages/contact";
 import Blog from "./pages/blog";
+import portfolioDetail from './portfolio/portfolio-detail';
+import NoMatch from "./pages/no-match";
+
 
 
 export default class App extends Component {
+
+  constructor() {
+    super();
+
+    this.getPortfolioItems = this.getPortfolioItems.bind(this);
+  }
+  getPortfolioItems () {
+    axios.get('https://caydenboothe.devcamp.space/portfolio/portfolio_items')
+  .then( response => {
+    // handle success
+    console.log("response data", response);
+  })
+  .catch( error => {
+    // handle error
+    console.log(error);
+  });
+  }
+
   render() {
+    this.getPortfolioItems();
     return (
       <div className='app'>
         
@@ -31,6 +53,8 @@ export default class App extends Component {
               <Route path="/about" component={About} />
               <Route path="/contact" component={Contact} />
               <Route path="/blog" component={Blog} />
+              <Route exact path="/portfolio/:slug" component={portfolioDetail} />
+              <Route component={NoMatch} />
             </Switch>
           </div>
         </Router>
