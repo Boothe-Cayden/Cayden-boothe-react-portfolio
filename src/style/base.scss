@@ -5,3 +5,8 @@ body {
    font-weight: 200;
 
 }
+
+.container {
+   display: grid;
+   grid-template-columns: 1fr;
+}

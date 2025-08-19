@@ -13,6 +13,7 @@ import About from "./pages/about";
 import Contact from "./pages/contact";
 import Blog from "./pages/blog";
 import portfolioDetail from './portfolio/portfolio-detail';
+import Auth from "./pages/auth";
 import NoMatch from "./pages/no-match";
 
 
@@ -20,12 +21,10 @@ import NoMatch from "./pages/no-match";
 export default class App extends Component {
   render() {
     return (
-      <div className='app'>
+      <div className='container'>
         
         <Router>
           <div>
-            <h1>Cayden Boothe's Dev Portfolio</h1>
-            <div>{moment().format('MMMM Do YYYY, h:mm:ss a')};</div>
             <NavigationComponent />
 
             <Switch>
@@ -33,6 +32,7 @@ export default class App extends Component {
               <Route path="/about" component={About} />
               <Route path="/contact" component={Contact} />
               <Route path="/blog" component={Blog} />
+              <Route path="/auth" component={Auth} />
               <Route exact path="/portfolio/:slug" component={portfolioDetail} />
               <Route component={NoMatch} />
             </Switch>
