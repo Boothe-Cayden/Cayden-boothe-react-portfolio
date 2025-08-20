@@ -88,7 +88,7 @@ export default class App extends Component {
                 )}
               />
 
-              <Route path="/about-me" component={About} />
+              <Route path="/about" component={About} />
               <Route path="/contact" component={Contact} />
               <Route path="/blog" component={Blog} />
               <Route
