@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
 
@@ -15,15 +16,18 @@ const NavigationComponent = props => {
   };
 
   const handleSignOut = () => {
-    axios.delete("https://api.devcamp.space/logout", { withCredentials: true }).then(response => {
+    axios
+      .delete("https://api.devcamp.space/logout", { withCredentials: true })
+      .then(response => {
         if (response.status === 200) {
-            props.history.push("/");
-            props.handleSuccessfulLogout();
+          props.history.push("/");
+          props.handleSuccessfulLogout();
         }
         return response.data;
-  }).catch(error => {
-    console.log("Error signing out", error)
-  })
+      })
+      .catch(error => {
+        console.log("Error signing out", error);
+      });
   };
 
   return (
@@ -36,7 +40,7 @@ const NavigationComponent = props => {
         </div>
 
         <div className="nav-link-wrapper">
-          <NavLink to="/about" activeClassName="nav-link-active">
+          <NavLink to="/about-me" activeClassName="nav-link-active">
             About
           </NavLink>
         </div>
@@ -59,10 +63,13 @@ const NavigationComponent = props => {
       </div>
 
       <div className="right-side">
-        CAYDEN BOOTHE
-        
-        {props.loggedInStatus === "LOGGED_IN" ? <a onClick={handleSignOut}>Sign Out</a> : null}
-        </div>
+        JORDAN HUDGENS
+        {props.loggedInStatus === "LOGGED_IN" ? (
+          <a onClick={handleSignOut}>
+            <FontAwesomeIcon icon="sign-out-alt" />
+          </a>
+        ) : null}
+      </div>
     </div>
   );
 };
