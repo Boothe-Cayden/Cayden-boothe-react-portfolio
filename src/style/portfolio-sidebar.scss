@@ -1,27 +1,32 @@
 .portfolio-sidebar-list-wrapper {
-    .portfolio-item-thumb {
-      padding: 21px;
-  
-      .portfolio-thumb-img img {
-        width: 100%;
+  .portfolio-item-thumb {
+    padding: 21px;
+
+    .portfolio-thumb-img img {
+      width: 100%;
+    }
+
+    .text-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .title {
+        color: $offwhite;
+        font-size: 1.5em;
       }
-  
-      .text-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-  
-        .title {
-          color: $offwhite;
-          font-size: 1.5em;
-        }
-  
-        .delete-icon {
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 15px;
+
+        .action-icon {
           cursor: pointer;
-          color: $offwhite;
+          color: whitesmoke;
           font-size: 1.5em;
-          transition: 0.5s ease-in-out;
-  
+          transition: 0.3s ease-in-out;
+
           &:hover {
             color: red;
           }
@@ -29,3 +34,4 @@
       }
     }
   }
+}
