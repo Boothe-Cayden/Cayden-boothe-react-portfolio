@@ -8,20 +8,37 @@ class Blog extends Component {
     super();
 
     this.state = {
-      blogItems: []
+      blogItems: [],
+      totalCount: 0,
+      currentPage: 0
     };
 
     this.getBlogItems = this.getBlogItems.bind(this);
+    this.activateInfiniteScroll();
+  }
+
+  activateInfiniteScroll() {
+    window.onscroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 200
+      ) {
+        console.log("get more posts");
+      }
+    };
   }
 
   getBlogItems() {
+    this.setState({
+      currentPage: this.state.currentPage + 1
+    });
     axios
       .get("https://caydenboothe.devcamp.space/portfolio/portfolio_blogs", {
         withCredentials: true
       })
       .then(response => {
         this.setState({
-          blogItems: response.data.portfolio_blogs
+          blogItems: response.data.portfolio_blogs,
+          totalCount: response.data.meta.total_records        
         });
       })
       .catch(error => {
@@ -34,17 +51,15 @@ class Blog extends Component {
   }
 
   render() {
-
     const blogRecords = this.state.blogItems.map(blogItem => {
-      return <BlogItem key={blogItem.id} blogItem={blogItem}/>;
+      return <BlogItem key={blogItem.id} blogItem={blogItem} />;
     });
 
     return (
-      <div>
-        <h1>{blogRecords}</h1>
+      <div className="blog-container">
+        <div className="content-container">{blogRecords}</div>
       </div>
-    );
-  }
+    );  }
 }
 
 export default Blog;
