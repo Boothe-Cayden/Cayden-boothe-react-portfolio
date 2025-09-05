@@ -12,9 +12,9 @@ class Blog extends Component {
     this.state = {
       blogItems: [],
       totalCount: 0,
-      currentPage: 0, 
+      currentPage: 0,
       isLoading: true,
-      blogModalIsOpen: false,
+      blogModalIsOpen: false
     };
 
     this.getBlogItems = this.getBlogItems.bind(this);
@@ -25,6 +25,27 @@ class Blog extends Component {
     this.handleSuccessfulNewBlogSubmission = this.handleSuccessfulNewBlogSubmission.bind(
       this
     );
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+  }
+
+  handleDeleteClick(blog) {
+    axios
+      .delete(
+        `https://api.devcamp.space/portfolio/portfolio_blogs/${blog.id}`,
+        { withCredentials: true }
+      )
+      .then(response => {
+        this.setState({
+          blogItems: this.state.blogItems.filter(blogItem => {
+            return blog.id !== blogItem.id;
+          })
+        });
+
+        return response.data;
+      })
+      .catch(error => {
+        console.log("delete blog error", error);
+      });
   }
 
   handleSuccessfulNewBlogSubmission(blog) {
@@ -40,10 +61,10 @@ class Blog extends Component {
     });
   }
 
-  handleNewBlogClick () {
+  handleNewBlogClick() {
     this.setState({
       blogModalIsOpen: true
-    })
+    });
   }
 
   onScroll() {
@@ -53,26 +74,35 @@ class Blog extends Component {
     ) {
       return;
     }
-      if (
-        window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 200
-      ) {
-        this.getBlogItems();
-      }
-    };
-  
+
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      this.getBlogItems();
+    }
+  }
 
   getBlogItems() {
     this.setState({
       currentPage: this.state.currentPage + 1
     });
+
     axios
-      .get(`https://caydenboothe.devcamp.space/portfolio/portfolio_blogs?page=${this.state.currentPage}`, { withCredentials: true })
+      .get(
+        `https://caydenboothe.devcamp.space/portfolio/portfolio_blogs?page=${
+          this.state.currentPage
+        }`,
+        {
+          withCredentials: true
+        }
+      )
       .then(response => {
         console.log("gettting", response.data);
         this.setState({
-          blogItems: this.state.blogItems.concat(response.data.portfolio_blogs),          
-          totalCount: response.data.meta.total_records, 
-          isLoading: false,       
+          blogItems: this.state.blogItems.concat(response.data.portfolio_blogs),
+          totalCount: response.data.meta.total_records,
+          isLoading: false
         });
       })
       .catch(error => {
@@ -80,7 +110,7 @@ class Blog extends Component {
       });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.getBlogItems();
   }
 
@@ -90,25 +120,38 @@ class Blog extends Component {
 
   render() {
     const blogRecords = this.state.blogItems.map(blogItem => {
-      return <BlogItem key={blogItem.id} blogItem={blogItem} />;
+      if (this.props.loggedInStatus === "LOGGED_IN") {
+        return (
+          <div key={blogItem.id} className="admin-blog-wrapper">
+            <BlogItem blogItem={blogItem} />
+            <a onClick={() => this.handleDeleteClick(blogItem)}>
+              <FontAwesomeIcon icon="trash" />
+            </a>
+          </div>
+        );
+      } else {
+        return <BlogItem key={blogItem.id} blogItem={blogItem} />;
+      }
     });
 
     return (
       <div className="blog-container">
-        <BlogModal 
-        handleSuccessfulNewBlogSubmission={this.handleSuccessfulNewBlogSubmission}
+        <BlogModal
+          handleSuccessfulNewBlogSubmission={
+            this.handleSuccessfulNewBlogSubmission
+          }
           handleModalClose={this.handleModalClose}
-          modalIsOpen={this.state.blogModalIsOpen} 
+          modalIsOpen={this.state.blogModalIsOpen}
         />
 
         {this.props.loggedInStatus === "LOGGED_IN" ? (
-        <div className="new-blog-link">
-          <a onClick={this.handleNewBlogClick}>
-            <FontAwesomeIcon icon="plus-circle" />
-          </a>
-        </div>
+          <div className="new-blog-link">
+            <a onClick={this.handleNewBlogClick}>
+              <FontAwesomeIcon icon="plus-circle" />
+            </a>
+          </div>
         ) : null}
-        
+
         <div className="content-container">{blogRecords}</div>
 
         {this.state.isLoading ? (
@@ -117,7 +160,8 @@ class Blog extends Component {
           </div>
         ) : null}
       </div>
-    );  }
+    );
+  }
 }
 
 export default Blog;

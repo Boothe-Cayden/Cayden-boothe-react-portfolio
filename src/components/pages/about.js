@@ -10,7 +10,8 @@ export default function() {
         style={{
           background: "url(" + profilePicture + ") no-repeat",
           backgroundSize: "cover",
-          backgroundPosition: "center"
+          backgroundPosition: "center",
+          borderRadius: 20,
         }}
       />
       <div className="right-column">
